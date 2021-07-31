@@ -9,6 +9,18 @@ const App = () => {
       });
 
       const server = await device.gatt.connect();
+      const service = await server.getPrimaryService('heart_rate');
+      const char = await service.getCharacteristic('heart_rate_measurement');
+
+      char.oncharacteristicvaluechanged = {
+        onChange: e => {
+          console.log(e);
+          console.log(e.target.value.getUint8(1));
+          console.log(e.target.value.getUint8(1) / 2);
+        }
+      };
+
+      char.startNotifications();
     } catch (err) {
       console.log(err);
     }
