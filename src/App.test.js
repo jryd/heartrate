@@ -18,16 +18,18 @@ const mockBluetooth = () => {
     getPrimaryService
   });
 
+  const requestDevice = jest.fn().mockResolvedValue({
+    gatt: {
+      connect,
+    }
+  });
 
   global.navigator.bluetooth = {
-    requestDevice: jest.fn().mockResolvedValue({
-      gatt: {
-        connect,
-      }
-    })
+    requestDevice,
   };
 
   return {
+    requestDevice,
     connect,
     getPrimaryService,
     getCharacteristic,
@@ -42,6 +44,16 @@ describe('App', () => {
   it('requests heartrate devices when you click pair', async () => {
     render(<App />);
 
+    const {requestDevice} = mockBluetooth();
+
+    await act(async () => userEvent.click(screen.getByRole('button')));
+
+    expect(requestDevice).toHaveBeenCalledWith(jasmine.objectContaining({"filters": [{"services": ["heart_rate"]}]}));
+  });
+
+  it('connects to the heartrate device once you pick one', async () => {
+    render(<App />);
+
     const {connect} = mockBluetooth();
 
     await act(async () => userEvent.click(screen.getByRole('button')));
@@ -49,27 +61,27 @@ describe('App', () => {
     expect(connect).toHaveBeenCalled();
   });
 
-  it('requests the primary service when it connects to the device', async () => {
+  it('requests the heart rate primary service when it connects to the device', async () => {
     render(<App />);
 
     const {getPrimaryService} = mockBluetooth();
 
     await act(async () => userEvent.click(screen.getByRole('button')));
 
-    expect(getPrimaryService).toHaveBeenCalled();
+    expect(getPrimaryService).toHaveBeenCalledWith('heart_rate');
   });
 
-  it('requests the heartrate characteristic when it connects to the primary service', async () => {
+  it('requests the heart rate measurement characteristic when it connects to the primary service', async () => {
     render(<App />);
 
     const {getCharacteristic} = mockBluetooth();
 
     await act(async () => userEvent.click(screen.getByRole('button')));
 
-    expect(getCharacteristic).toHaveBeenCalled();
+    expect(getCharacteristic).toHaveBeenCalledWith('heart_rate_measurement');
   });
 
-  it('starts notifications on the heartrate characteristic', async () => {
+  it('starts notifications on the heart rate measurement characteristic', async () => {
     render(<App />);
 
     const {startNotifications} = mockBluetooth();

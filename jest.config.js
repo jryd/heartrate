@@ -14,5 +14,6 @@ module.exports = {
     '[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$',
     '^.+\\.module\\.(css|sass|scss)$'
   ],
-  resetMocks: true
+  resetMocks: true,
+  testRunner: "jest-jasmine2"
 };
