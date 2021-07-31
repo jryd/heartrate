@@ -3,6 +3,37 @@ import { act, render, screen } from '@testing-library/react';
 import App from './App';
 import userEvent from '@testing-library/user-event';
 
+const mockBluetooth = () => {
+  const startNotifications = jest.fn();
+
+  const getCharacteristic = jest.fn().mockResolvedValue({
+    startNotifications,
+  });
+
+  const getPrimaryService = jest.fn().mockResolvedValue({
+    getCharacteristic,
+  });
+
+  const connect = jest.fn().mockResolvedValue({
+    getPrimaryService
+  });
+
+
+  global.navigator.bluetooth = {
+    requestDevice: jest.fn().mockResolvedValue({
+      gatt: {
+        connect,
+      }
+    })
+  };
+
+  return {
+    connect,
+    getPrimaryService,
+    getCharacteristic,
+    startNotifications,
+  };
+}
 describe('App', () => {
   it('renders', () => {
     render(<App />);
@@ -11,28 +42,7 @@ describe('App', () => {
   it('requests heartrate devices when you click pair', async () => {
     render(<App />);
 
-    const startNotifications = jest.fn();
-
-    const getCharacteristic = jest.fn().mockResolvedValue({
-      startNotifications,
-    });
-
-    const getPrimaryService = jest.fn().mockResolvedValue({
-      getCharacteristic,
-    });
-
-    const connect = jest.fn().mockResolvedValue({
-      getPrimaryService
-    });
-
-
-    global.navigator.bluetooth = {
-      requestDevice: jest.fn().mockResolvedValue({
-        gatt: {
-          connect,
-        }
-      })
-    };
+    const {connect} = mockBluetooth();
 
     await act(async () => userEvent.click(screen.getByRole('button')));
 
@@ -42,27 +52,7 @@ describe('App', () => {
   it('requests the primary service when it connects to the device', async () => {
     render(<App />);
 
-    const startNotifications = jest.fn();
-
-    const getCharacteristic = jest.fn().mockResolvedValue({
-      startNotifications,
-    });
-
-    const getPrimaryService = jest.fn().mockResolvedValue({
-      getCharacteristic,
-    });
-
-    const connect = jest.fn().mockResolvedValue({
-      getPrimaryService
-    });
-
-    global.navigator.bluetooth = {
-      requestDevice: jest.fn().mockResolvedValue({
-        gatt: {
-          connect,
-        }
-      })
-    };
+    const {getPrimaryService} = mockBluetooth();
 
     await act(async () => userEvent.click(screen.getByRole('button')));
 
@@ -72,27 +62,7 @@ describe('App', () => {
   it('requests the heartrate characteristic when it connects to the primary service', async () => {
     render(<App />);
 
-    const startNotifications = jest.fn();
-
-    const getCharacteristic = jest.fn().mockResolvedValue({
-      startNotifications,
-    });
-
-    const getPrimaryService = jest.fn().mockResolvedValue({
-      getCharacteristic,
-    });
-
-    const connect = jest.fn().mockResolvedValue({
-      getPrimaryService
-    });
-
-    global.navigator.bluetooth = {
-      requestDevice: jest.fn().mockResolvedValue({
-        gatt: {
-          connect,
-        }
-      })
-    };
+    const {getCharacteristic} = mockBluetooth();
 
     await act(async () => userEvent.click(screen.getByRole('button')));
 
@@ -102,27 +72,7 @@ describe('App', () => {
   it('starts notifications on the heartrate characteristic', async () => {
     render(<App />);
 
-    const startNotifications = jest.fn();
-
-    const getCharacteristic = jest.fn().mockResolvedValue({
-      startNotifications,
-    });
-
-    const getPrimaryService = jest.fn().mockResolvedValue({
-      getCharacteristic,
-    });
-
-    const connect = jest.fn().mockResolvedValue({
-      getPrimaryService
-    });
-
-    global.navigator.bluetooth = {
-      requestDevice: jest.fn().mockResolvedValue({
-        gatt: {
-          connect,
-        }
-      })
-    };
+    const {startNotifications} = mockBluetooth();
 
     await act(async () => userEvent.click(screen.getByRole('button')));
 
