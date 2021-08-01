@@ -5,9 +5,11 @@ import userEvent from '@testing-library/user-event';
 
 const mockBluetooth = () => {
   const startNotifications = jest.fn();
+  const addEventListener = jest.fn();
 
   const getCharacteristic = jest.fn().mockResolvedValue({
     startNotifications,
+    addEventListener,
   });
 
   const getPrimaryService = jest.fn().mockResolvedValue({
@@ -33,6 +35,7 @@ const mockBluetooth = () => {
     connect,
     getPrimaryService,
     getCharacteristic,
+    addEventListener,
     startNotifications,
   };
 }
@@ -79,6 +82,16 @@ describe('App', () => {
     await act(async () => userEvent.click(screen.getByRole('button')));
 
     expect(getCharacteristic).toHaveBeenCalledWith('heart_rate_measurement');
+  });
+
+  it('subscribes to heartrate changes', async () => {
+    render(<App />);
+
+    const {addEventListener} = mockBluetooth();
+
+    await act(async () => userEvent.click(screen.getByRole('button')));
+
+    expect(addEventListener).toHaveBeenCalledWith('characteristicvaluechanged', jasmine.any(Function));
   });
 
   it('starts notifications on the heart rate measurement characteristic', async () => {
