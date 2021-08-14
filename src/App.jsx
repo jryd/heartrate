@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
 const App = () => {
+  const [heartrate, setHeartrate] = useState([]);
+
   const connect = async props => {
     try {
       const device = await navigator.bluetooth.requestDevice({
@@ -14,6 +16,7 @@ const App = () => {
 
       char.addEventListener('characteristicvaluechanged', e => {
         console.log(e.target.value.getUint8(1))
+        setHeartrate((currentValue) => [...currentValue.slice(-99), e.target.value.getUint8(1)])
       });
 
       char.startNotifications()
@@ -22,7 +25,12 @@ const App = () => {
     }
   }
 
-  return <button onClick={connect}>Pair to heartrate monitor</button>
+  return <div>
+    <button onClick={connect}>Pair to heartrate monitor</button>
+    <ul>
+      {heartrate.map(val => <li>{val}</li>)}
+    </ul>
+  </div>
 };
 
 export default App;
