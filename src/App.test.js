@@ -103,4 +103,29 @@ describe('App', () => {
 
     expect(startNotifications).toHaveBeenCalled();
   });
+
+  it('displays your current heart rate', async () => {
+    render(<App />);
+
+    expect(screen.getByText(/current hr is 0 bpm/i));
+
+    let characteristicValueChanged = null;
+
+    const {addEventListener} = mockBluetooth();
+
+    addEventListener.mockImplementation((event, callback) => characteristicValueChanged = callback);
+
+    await act(async () => userEvent.click(screen.getByRole('button')));
+
+    const dataView = new DataView(new ArrayBuffer(16));
+    dataView.setUint8(1, 85);
+
+    await act(async () => characteristicValueChanged({
+      target: {
+        value: dataView
+      }
+    }));
+
+    expect(screen.getByText(/current hr is 85 bpm/i));
+  });
 });

@@ -15,7 +15,6 @@ const App = () => {
       const char = await service.getCharacteristic('heart_rate_measurement');
 
       char.addEventListener('characteristicvaluechanged', e => {
-        console.log(e.target.value.getUint8(1))
         setHeartrate((currentValue) => [...currentValue.slice(-99), e.target.value.getUint8(1)])
       });
 
@@ -27,9 +26,7 @@ const App = () => {
 
   return <div>
     <button onClick={connect}>Pair to heartrate monitor</button>
-    <ul>
-      {heartrate.map(val => <li>{val}</li>)}
-    </ul>
+    <p>Current HR is {heartrate.slice(-1)[0] || 0} bpm</p>
   </div>
 };
 
