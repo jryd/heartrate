@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import FlipNumbers from 'react-flip-numbers';
 
 const App = () => {
   const [heartrate, setHeartrate] = useState([]);
@@ -26,7 +27,10 @@ const App = () => {
 
   return <div>
     <button onClick={connect}>Pair to heartrate monitor</button>
-    <p>Current HR is {heartrate.slice(-1)[0] || 0} bpm</p>
+    <div className="flex">
+      <FlipNumbers height={12} width={12} color="red" background="white" play perspective={100} numbers={`${heartrate.slice(-1)[0] || 0}`} />
+      <span>bpm</span>
+    </div>
   </div>
 };
 

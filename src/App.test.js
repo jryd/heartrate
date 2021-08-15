@@ -3,6 +3,11 @@ import { act, render, screen } from '@testing-library/react';
 import App from './App';
 import userEvent from '@testing-library/user-event';
 
+jest.mock('react-flip-numbers', () => ({
+  __esModule: true,
+  default: ({numbers}) => <span>{numbers}</span>
+}));
+
 const mockBluetooth = () => {
   const startNotifications = jest.fn();
   const addEventListener = jest.fn();
@@ -107,7 +112,7 @@ describe('App', () => {
   it('displays your current heart rate', async () => {
     render(<App />);
 
-    expect(screen.getByText(/current hr is 0 bpm/i));
+    expect(screen.getByText(0)).toBeInTheDocument();
 
     let characteristicValueChanged = null;
 
@@ -126,6 +131,6 @@ describe('App', () => {
       }
     }));
 
-    expect(screen.getByText(/current hr is 85 bpm/i));
+    expect(screen.getByText(85)).toBeInTheDocument();
   });
 });
