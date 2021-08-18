@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import FlipNumbers from 'react-flip-numbers';
+import { Line } from 'react-chartjs-2';
 
 const App = () => {
   const [heartrate, setHeartrate] = useState([]);
@@ -31,6 +32,23 @@ const App = () => {
       <FlipNumbers height={12} width={12} color="red" background="white" play perspective={100} numbers={`${heartrate.slice(-1)[0] || 0}`} />
       <span>bpm</span>
     </div>
+    <Line data={{
+      labels: [...Array(100).keys()],
+      datasets: [{
+        label: 'Heartrate',
+        data: heartrate,
+        fill: false,
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgba(255, 99, 132, 0.2)',
+      }]}} options={{
+        animation: {duration:0},
+      scales: {
+        y: {
+              suggestedMin: 30,
+              suggestedMax:200,
+            }
+      }
+    }}/>
   </div>
 };
 

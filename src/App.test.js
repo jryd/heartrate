@@ -7,6 +7,9 @@ jest.mock('react-flip-numbers', () => ({
   __esModule: true,
   default: ({numbers}) => <span>{numbers}</span>
 }));
+jest.mock('react-chartjs-2', () => ({
+  Line: () => <canvas data-testid="line-chart" />,
+}));
 
 const mockBluetooth = () => {
   const startNotifications = jest.fn();
@@ -132,5 +135,11 @@ describe('App', () => {
     }));
 
     expect(screen.getByText(85)).toBeInTheDocument();
+  });
+
+  it('renders a graph', () => {
+    render(<App />);
+
+    expect(screen.getByTestId(/line-chart/i)).toBeInTheDocument();
   });
 });
