@@ -53,6 +53,11 @@ const App = () => {
         x: {
           display:false
         }
+      },
+      elements: {
+          point: {
+            radius: 0
+          }
       }
     }}/>
   </div>
