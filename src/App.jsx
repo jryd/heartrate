@@ -58,6 +58,11 @@ const App = () => {
           point: {
             radius: 0
           }
+      },
+      plugins: {
+        legend: {
+          display: false
+        }
       }
     }}/>
   </div>
