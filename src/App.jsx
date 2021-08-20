@@ -42,8 +42,7 @@ const App = () => {
         label: 'Heartrate',
         data: heartrate,
         fill: false,
-        backgroundColor: 'rgb(255, 99, 132)',
-        borderColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 0.4)',
       }]}} options={{
         animation: {duration:0},
       scales: {
