@@ -50,7 +50,10 @@ const App = () => {
         y: {
               suggestedMin: 30,
               suggestedMax:200,
-            }
+            },
+        x: {
+          display:false
+        }
       }
     }}/>
   </div>
