@@ -1,7 +1,4 @@
 import React  from 'react';
-import FlipNumbers from 'react-flip-numbers';
-import { Line } from 'react-chartjs-2';
-import { HeartIcon } from '@heroicons/react/outline';
 import useHeartrate from './useHeartrate';
 import Heartrate from './Heartrate';
 import HeartrateHistory from './HeartrateHistory';
