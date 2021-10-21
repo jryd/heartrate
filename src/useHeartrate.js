@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
 const useHeartrate = () => {
+  const [isPairing, setIsPairing] = useState(false);
+  const [isPaired, setIsPaired] = useState(false);
   const [heartrate, setHeartrate] = useState([]);
   const [currentHeartrate, setCurrentHeartrate] = useState(0);
 
@@ -9,6 +11,8 @@ const useHeartrate = () => {
   }, [heartrate]);
 
   const connect = async () => {
+    setIsPairing(true);
+
     try {
       const device = await navigator.bluetooth.requestDevice({
         filters: [{ services: ['heart_rate'] }],
@@ -23,13 +27,18 @@ const useHeartrate = () => {
         setHeartrate((currentValue) => [...currentValue.slice(-99), e.target.value.getUint8(1)])
       });
 
-      char.startNotifications()
+      char.startNotifications();
+      setIsPaired(true);
     } catch (err) {
       console.log(err);
     }
+
+    setIsPairing(false);
   }
 
   return {
+    isPairing,
+    isPaired,
     heartrate,
     currentHeartrate,
     connect
